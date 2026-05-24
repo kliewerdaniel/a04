@@ -54,42 +54,31 @@ export default function LabPage() {
         background="grid"
       />
 
-      <section className="py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="py-20 lg:py-24">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
           <StaggerContainer className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {experiments.map((exp) => {
               const Icon = exp.icon;
               return (
                 <StaggerItem key={exp.title}>
-                  <Card className="p-6 h-full flex flex-col group hover:translate-y-[-4px] transition-all duration-200 hover:shadow-md">
-                    <div className="p-3 rounded-lg bg-accent/10 text-accent w-fit mb-4 group-hover:bg-accent group-hover:text-accent-foreground transition-colors duration-200">
-                      <Icon className="h-6 w-6" />
+                  <Card className="p-6 sm:p-7 h-full flex flex-col group hover:shadow-elevated hover:-translate-y-0.5 transition-all duration-300">
+                    <div className="p-3 rounded-2xl bg-accent-muted text-accent w-fit mb-5 group-hover:bg-accent group-hover:text-accent-foreground transition-colors duration-300">
+                      <Icon className="h-6 w-6" aria-hidden="true" />
                     </div>
                     <div className="flex items-center gap-2 mb-3">
-                      <Badge variant="outline" className="text-xs">
-                        {exp.status}
-                      </Badge>
-                      <span className="text-xs text-muted-foreground">
-                        {exp.tech}
-                      </span>
+                      <Badge variant="outline" className="text-xs">{exp.status}</Badge>
+                      <span className="text-xs text-muted-foreground">{exp.tech}</span>
                     </div>
                     <h3 className="font-semibold text-lg">{exp.title}</h3>
-                    <p className="mt-2 text-sm text-muted-foreground flex-1">
-                      {exp.description}
-                    </p>
+                    <p className="mt-2 text-sm text-muted-foreground leading-relaxed flex-1">{exp.description}</p>
                     {exp.status === "Coming Soon" ? (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="mt-4 w-full"
-                        disabled
-                      >
+                      <Button variant="outline" size="sm" className="mt-5 w-full" disabled>
                         Coming Soon
                       </Button>
                     ) : (
-                      <Link href={exp.href} className="mt-4 block">
+                      <Link href={exp.href} className="mt-5 block">
                         <Button size="sm" className="w-full gap-2">
-                          Launch <ArrowRight className="h-3 w-3" />
+                          Launch <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
                         </Button>
                       </Link>
                     )}
@@ -100,9 +89,9 @@ export default function LabPage() {
           </StaggerContainer>
 
           <FadeIn className="mt-16 text-center">
-            <p className="text-muted-foreground italic">
-              The lab is a living space. Some experiments work perfectly. Some
-              are works in progress. All are real.
+            <div className="w-12 h-0.5 bg-accent/40 mx-auto mb-6" aria-hidden="true" />
+            <p className="text-muted-foreground italic max-w-2xl mx-auto leading-relaxed">
+              The lab is a living space. Some experiments work perfectly. Some are works in progress. All are real.
             </p>
           </FadeIn>
         </div>

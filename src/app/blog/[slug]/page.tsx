@@ -1,3 +1,4 @@
+import React from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "lucide-react";
@@ -7,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { getPost, getPosts, getRelatedPosts, getHeadings, getAdjacentPosts } from "@/lib/blog";
 import { SITE_URL } from "@/lib/constants";
+import { formatDate } from "@/lib/utils";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -58,95 +60,149 @@ export default async function BlogPostPage({ params }: Props) {
   const { prev, next } = getAdjacentPosts(slug);
   const headings = getHeadings(post.content);
 
+  function renderMarkdown(content: string) {
+    const lines = content.split("\n");
+    const elements: React.ReactNode[] = [];
+    let inCodeBlock = false;
+    let codeContent = "";
+
+    lines.forEach((line, i) => {
+      if (line.startsWith("```")) {
+        if (inCodeBlock) {
+          elements.push(
+            <pre key={i} className="overflow-x-auto rounded-xl bg-code-bg border border-border-subtle p-4 my-6 text-sm leading-relaxed">
+              <code className="font-mono text-xs">{codeContent}</code>
+            </pre>
+          );
+          codeContent = "";
+          inCodeBlock = false;
+        } else {
+          inCodeBlock = true;
+        }
+        return;
+      }
+
+      if (inCodeBlock) {
+        codeContent += (codeContent ? "\n" : "") + line;
+        return;
+      }
+
+      if (line.startsWith("## ")) {
+        const text = line.replace("## ", "");
+        const id = text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+        elements.push(
+          <h2 key={i} id={id} className="text-2xl sm:text-3xl font-bold tracking-tight mt-12 mb-4 scroll-mt-24">
+            {text}
+          </h2>
+        );
+        return;
+      }
+
+      if (line.startsWith("### ")) {
+        const text = line.replace("### ", "");
+        const id = text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+        elements.push(
+          <h3 key={i} id={id} className="text-xl font-semibold tracking-tight mt-8 mb-3 scroll-mt-24">
+            {text}
+          </h3>
+        );
+        return;
+      }
+
+      if (line.startsWith("---")) {
+        elements.push(<hr key={i} className="my-10 border-border-subtle" />);
+        return;
+      }
+
+      if (line.startsWith("- ")) {
+        const text = line.replace("- ", "");
+        elements.push(
+          <li key={i} className="text-base leading-relaxed text-foreground/90 ml-6 list-disc pl-2">
+            {text}
+          </li>
+        );
+        return;
+      }
+
+      if (line.match(/^\d+\.\s/)) {
+        const text = line.replace(/^\d+\.\s/, "");
+        elements.push(
+          <li key={i} className="text-base leading-relaxed text-foreground/90 ml-6 list-decimal pl-2">
+            {text}
+          </li>
+        );
+        return;
+      }
+
+      const processed = line
+        .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+        .replace(/`([^`]+)`/g, "<code class='px-1.5 py-0.5 rounded-md bg-code-bg text-sm font-mono text-primary'>$1</code>");
+
+      if (!line.trim()) {
+        elements.push(<div key={i} className="h-4" />);
+        return;
+      }
+
+      elements.push(
+        <p key={i} className="text-base leading-relaxed text-foreground/90" dangerouslySetInnerHTML={{ __html: processed }} />
+      );
+    });
+
+    return elements;
+  }
+
   return (
-    <article className="pt-24 pb-16">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <article className="pt-28 pb-20">
+      <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
         <Link
           href="/blog"
-          className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
+          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8 group"
         >
-          <ArrowLeft className="h-3 w-3" /> Back to blog
+          <ArrowLeft className="h-3.5 w-3.5 group-hover:-translate-x-0.5 transition-transform" aria-hidden="true" /> Back to blog
         </Link>
 
-        <div className="lg:grid lg:grid-cols-[1fr_280px] lg:gap-12">
+        <div className="lg:grid lg:grid-cols-[1fr_280px] lg:gap-14">
           <div>
-            <header className="mb-8">
-              <div className="flex items-center gap-3 mb-4">
-                <Badge variant="secondary">{post.category}</Badge>
-                <span className="text-sm text-muted-foreground">
-                  {new Date(post.date).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </span>
-                <span className="text-sm text-muted-foreground">
-                  {post.reading_time} min read
-                </span>
+            <header className="mb-10">
+              <div className="flex flex-wrap items-center gap-3 mb-5">
+                <Badge variant="primary">{post.category}</Badge>
+                <span className="text-sm text-muted-foreground">{formatDate(post.date)}</span>
+                <span className="text-sm text-muted-foreground">· {post.reading_time} min read</span>
               </div>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight leading-tight">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight leading-tight text-balance">
                 {post.title}
               </h1>
-              <p className="mt-4 text-lg text-muted-foreground">
-                {post.description}
-              </p>
+              {post.description && (
+                <p className="mt-5 text-base sm:text-lg text-muted-foreground leading-relaxed max-w-3xl">
+                  {post.description}
+                </p>
+              )}
             </header>
 
-            <div className="prose prose-neutral dark:prose-invert max-w-none">
-              {post.content.split("\n").map((line, i) => {
-                if (line.startsWith("## ")) {
-                  const text = line.replace("## ", "");
-                  const id = text
-                    .toLowerCase()
-                    .replace(/[^a-z0-9]+/g, "-")
-                    .replace(/(^-|-$)/g, "");
-                  return (
-                    <h2 key={i} id={id} className="scroll-mt-24">
-                      {text}
-                    </h2>
-                  );
-                }
-                if (line.startsWith("### ")) {
-                  const text = line.replace("### ", "");
-                  const id = text
-                    .toLowerCase()
-                    .replace(/[^a-z0-9]+/g, "-")
-                    .replace(/(^-|-$)/g, "");
-                  return (
-                    <h3 key={i} id={id} className="scroll-mt-24">
-                      {text}
-                    </h3>
-                  );
-                }
-                if (line.startsWith("```")) return null;
-                if (line.startsWith("---")) return null;
-                if (!line.trim()) return <br key={i} />;
-                return <p key={i}>{line}</p>;
-              })}
+            <div className="max-w-3xl">
+              {renderMarkdown(post.content)}
             </div>
 
             {post.tags && post.tags.length > 0 && (
-              <div className="mt-12 pt-8 border-t border-border">
+              <div className="mt-12 pt-8 border-t border-border-subtle max-w-3xl">
+                <h4 className="text-sm font-semibold mb-3">Tags</h4>
                 <div className="flex flex-wrap gap-2">
                   {post.tags.map((tag) => (
-                    <Badge key={tag} variant="outline">
-                      {tag}
-                    </Badge>
+                    <Badge key={tag} variant="outline">{tag}</Badge>
                   ))}
                 </div>
               </div>
             )}
 
-            <div className="mt-8 flex items-center justify-between border-t border-border pt-8">
+            <div className="mt-10 flex items-center justify-between border-t border-border-subtle pt-8 max-w-3xl">
               <div>
                 {prev && (
                   <Link
                     href={`/blog/${prev.slug}`}
                     className="group flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
-                    <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-                    <span className="hidden sm:inline">{prev.title}</span>
-                    <span className="sm:hidden">Previous</span>
+                    <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" aria-hidden="true" />
+                    <span className="max-w-[200px] truncate">{prev.title}</span>
                   </Link>
                 )}
               </div>
@@ -156,9 +212,8 @@ export default async function BlogPostPage({ params }: Props) {
                     href={`/blog/${next.slug}`}
                     className="group flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
-                    <span className="hidden sm:inline">{next.title}</span>
-                    <span className="sm:hidden">Next</span>
-                    <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                    <span className="max-w-[200px] truncate">{next.title}</span>
+                    <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
                   </Link>
                 )}
               </div>
@@ -166,13 +221,13 @@ export default async function BlogPostPage({ params }: Props) {
           </div>
 
           <aside className="hidden lg:block">
-            <div className="sticky top-24 space-y-8">
+            <div className="sticky top-28 space-y-8">
               {headings.length > 0 && (
                 <div>
-                  <h4 className="text-sm font-semibold mb-3">
-                    Table of Contents
+                  <h4 className="text-xs font-semibold tracking-widest uppercase text-muted-foreground mb-3">
+                    On this page
                   </h4>
-                  <nav className="space-y-2">
+                  <nav className="space-y-2" aria-label="Table of contents">
                     {headings.map((h) => (
                       <a
                         key={h.id}
@@ -190,39 +245,35 @@ export default async function BlogPostPage({ params }: Props) {
 
               {related.length > 0 && (
                 <div>
-                  <h4 className="text-sm font-semibold mb-3">Related Posts</h4>
+                  <h4 className="text-xs font-semibold tracking-widest uppercase text-muted-foreground mb-3">
+                    Related
+                  </h4>
                   <div className="space-y-3">
                     {related.map((rp) => (
                       <Link
                         key={rp.slug}
                         href={`/blog/${rp.slug}`}
-                        className="block p-3 rounded-lg border border-border hover:bg-muted transition-colors"
+                        className="block p-4 rounded-xl border border-border-subtle hover:bg-muted transition-colors"
                       >
-                        <p className="text-sm font-medium line-clamp-2">
-                          {rp.title}
-                        </p>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          {rp.reading_time} min read
-                        </p>
+                        <p className="text-sm font-medium leading-snug line-clamp-2">{rp.title}</p>
+                        <p className="text-xs text-muted-foreground mt-2">{rp.reading_time} min read</p>
                       </Link>
                     ))}
                   </div>
                 </div>
               )}
 
-              <div className="p-4 rounded-lg border border-border bg-card">
-                <h4 className="text-sm font-semibold mb-2">
-                  Need help implementing this?
-                </h4>
-                <p className="text-xs text-muted-foreground mb-3">
-                  I build production AI systems for organizations.
+              <Card className="p-5">
+                <h4 className="text-sm font-semibold mb-2">Need help implementing this?</h4>
+                <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
+                  I build production AI systems for organizations. Let&apos;s talk about your project.
                 </p>
                 <Link href="/contact">
-                  <Button size="sm" className="w-full text-xs gap-1">
-                    Get in Touch <ArrowRight className="h-3 w-3" />
+                  <Button size="sm" className="w-full gap-1.5">
+                    Get in Touch <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
                   </Button>
                 </Link>
-              </div>
+              </Card>
             </div>
           </aside>
         </div>

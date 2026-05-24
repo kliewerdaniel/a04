@@ -1,12 +1,14 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import type { Metric } from "@/types";
+import { FadeIn } from "@/components/animations/fade-in";
 
 interface MetricsBarProps {
   metrics: readonly Metric[];
   animate?: boolean;
+  className?: string;
 }
 
 function AnimatedMetric({
@@ -30,8 +32,7 @@ function AnimatedMetric({
       ([entry]) => {
         if (entry.isIntersecting && !done.current) {
           done.current = true;
-          let start = 0;
-          const duration = 1500;
+          const duration = 1800;
           const startTime = performance.now();
 
           function tick(now: number) {
@@ -51,7 +52,7 @@ function AnimatedMetric({
           requestAnimationFrame(tick);
         }
       },
-      { threshold: 0.5 }
+      { threshold: 0.3 }
     );
 
     if (ref.current) observer.observe(ref.current);
@@ -60,25 +61,27 @@ function AnimatedMetric({
 
   return (
     <div ref={ref} className="text-center">
-      <div className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
+      <div className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground tabular-nums">
         {prefix}
         {display}
         {suffix}
       </div>
-      <div className="mt-1 text-sm text-muted-foreground">{label}</div>
+      <div className="mt-2 text-sm text-muted-foreground">{label}</div>
     </div>
   );
 }
 
-export function MetricsBar({ metrics, animate = true }: MetricsBarProps) {
+export function MetricsBar({ metrics, animate = true, className }: MetricsBarProps) {
   return (
-    <section className="py-16 border-y border-border">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-          {metrics.map((metric) => (
-            <AnimatedMetric key={metric.label} {...metric} animate={animate} />
-          ))}
-        </div>
+    <section className={cn("py-16 lg:py-20 border-y border-border-subtle", className)}>
+      <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
+        <FadeIn>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+            {metrics.map((metric) => (
+              <AnimatedMetric key={metric.label} {...metric} animate={animate} />
+            ))}
+          </div>
+        </FadeIn>
       </div>
     </section>
   );

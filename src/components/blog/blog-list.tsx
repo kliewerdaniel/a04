@@ -1,12 +1,11 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import Link from "next/link";
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
 import Fuse from "fuse.js";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { BlogCard } from "@/components/blog/blog-card";
 import { StaggerContainer, StaggerItem } from "@/components/animations/fade-in";
+import { cn } from "@/lib/utils";
 import type { BlogPost } from "@/types";
 
 interface BlogListProps {
@@ -27,7 +26,7 @@ export function BlogList({ posts, categories }: BlogListProps) {
           { name: "tags", weight: 0.2 },
           { name: "category", weight: 0.1 },
         ],
-        threshold: 0.4,
+        threshold: 0.35,
         distance: 100,
         minMatchCharLength: 2,
       }),
@@ -36,32 +35,31 @@ export function BlogList({ posts, categories }: BlogListProps) {
 
   const filteredPosts = useMemo(() => {
     let result = posts;
-
     if (activeCategory !== "All") {
       result = result.filter((p) => p.category === activeCategory);
     }
-
     if (searchQuery.trim()) {
-      const searchResults = fuse.search(searchQuery);
-      result = searchResults.map((r) => r.item);
+      result = fuse.search(searchQuery).map((r) => r.item);
     }
-
     return result;
   }, [activeCategory, searchQuery, posts, fuse]);
 
   return (
     <>
       <div className="mt-8 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-        <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
+        <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1" role="tablist" aria-label="Filter by category">
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className={`px-3 py-1.5 text-sm rounded-full whitespace-nowrap transition-colors ${
+              role="tab"
+              aria-selected={activeCategory === cat}
+              className={cn(
+                "px-3.5 py-1.5 text-sm rounded-full whitespace-nowrap transition-all duration-200 font-medium",
                 activeCategory === cat
-                  ? "bg-primary text-primary-foreground"
+                  ? "bg-primary text-primary-foreground shadow-sm"
                   : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-              }`}
+              )}
             >
               {cat}
             </button>
@@ -69,52 +67,36 @@ export function BlogList({ posts, categories }: BlogListProps) {
         </div>
 
         <div className="relative w-full sm:w-64">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" aria-hidden="true" />
           <input
-            type="text"
+            type="search"
             placeholder="Search posts..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+            className="w-full pl-10 pr-9 py-2.5 rounded-xl border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-shadow"
+            aria-label="Search blog posts"
           />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="Clear search"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
         </div>
       </div>
 
       {filteredPosts.length === 0 ? (
-        <div className="mt-16 text-center">
-          <p className="text-muted-foreground">
-            No posts found. Try different keywords.
-          </p>
+        <div className="mt-20 text-center">
+          <p className="text-muted-foreground text-lg">No posts found. Try different keywords.</p>
         </div>
       ) : (
-        <StaggerContainer className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredPosts.map((post) => (
+        <StaggerContainer className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {filteredPosts.slice(0, 30).map((post) => (
             <StaggerItem key={post.slug}>
-              <Link href={`/blog/${post.slug}`} className="block group">
-                <Card className="p-5 h-full hover:translate-y-[-4px] transition-all duration-200 hover:shadow-md">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Badge variant="secondary" className="text-xs">
-                      {post.category}
-                    </Badge>
-                    <span className="text-xs text-muted-foreground">
-                      {post.reading_time} min read
-                    </span>
-                  </div>
-                  <h2 className="font-semibold group-hover:text-primary transition-colors line-clamp-2">
-                    {post.title}
-                  </h2>
-                  <p className="mt-2 text-sm text-muted-foreground line-clamp-2">
-                    {post.description}
-                  </p>
-                  <div className="mt-3 text-xs text-muted-foreground">
-                    {new Date(post.date).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                  </div>
-                </Card>
-              </Link>
+              <BlogCard post={post} />
             </StaggerItem>
           ))}
         </StaggerContainer>

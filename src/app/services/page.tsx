@@ -46,6 +46,12 @@ const engagements = [
   },
 ];
 
+const steps = [
+  { number: "01", title: "Discovery", body: "Understand your stack, goals, and constraints." },
+  { number: "02", title: "Architecture", body: "Design the system, choose technologies, plan integration." },
+  { number: "03", title: "Delivery", body: "Build, test, deploy, document, and hand off." },
+];
+
 export default function ServicesPage() {
   return (
     <>
@@ -56,86 +62,59 @@ export default function ServicesPage() {
         background="gradient"
       />
 
-      <section className="py-16 border-b border-border">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+      <section className="py-24 lg:py-32 border-b border-border-subtle">
+        <div className="mx-auto max-w-5xl px-5 sm:px-8 lg:px-10">
           <FadeIn>
-            <h2 className="text-2xl font-semibold text-center mb-8">
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-center mb-12">
               How It Works
             </h2>
-            <div className="grid gap-6 sm:grid-cols-3">
-              <div className="text-center">
-                <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center text-lg font-bold mx-auto">
-                  1
-                </div>
-                <h3 className="font-semibold mt-4">Discovery</h3>
-                <p className="text-sm text-muted-foreground mt-2">
-                  Understand your stack, goals, and constraints. Deliverable:
-                  Architecture document.
-                </p>
-              </div>
-              <div className="text-center">
-                <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center text-lg font-bold mx-auto">
-                  2
-                </div>
-                <h3 className="font-semibold mt-4">Architecture</h3>
-                <p className="text-sm text-muted-foreground mt-2">
-                  Design the system, choose technologies, plan integration.
-                  Deliverable: Technical specification.
-                </p>
-              </div>
-              <div className="text-center">
-                <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center text-lg font-bold mx-auto">
-                  3
-                </div>
-                <h3 className="font-semibold mt-4">Delivery</h3>
-                <p className="text-sm text-muted-foreground mt-2">
-                  Build, test, deploy, document, hand off. Deliverable: Working
-                  system plus documentation.
-                </p>
-              </div>
-            </div>
           </FadeIn>
-        </div>
-      </section>
-
-      <ServicesGrid maxItems={5} showAll />
-
-      <section className="py-24 bg-muted/30">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <FadeIn>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-center">
-              Engagement Models
-            </h2>
-            <p className="mt-3 text-lg text-muted-foreground text-center max-w-2xl mx-auto">
-              Different needs, different approaches. All fixed-price, all
-              outcome-oriented.
-            </p>
-          </FadeIn>
-
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {engagements.map((eng) => (
-              <FadeIn key={eng.title}>
-                <Card className="p-6 h-full flex flex-col">
-                  <h3 className="font-semibold text-lg">{eng.title}</h3>
-                  <div className="mt-2 flex items-baseline gap-2">
-                    <span className="text-3xl font-bold">{eng.price}</span>
-                    <span className="text-sm text-muted-foreground">
-                      {eng.duration}
-                    </span>
+          <div className="grid gap-8 sm:grid-cols-3">
+            {steps.map((step, i) => (
+              <FadeIn key={step.number} delay={i * 0.15}>
+                <div className="text-center">
+                  <div className="w-14 h-14 rounded-2xl bg-primary-muted text-primary flex items-center justify-center text-xl font-bold mx-auto">
+                    {step.number}
                   </div>
-                  <p className="mt-4 text-sm text-muted-foreground flex-1">
-                    {eng.description}
-                  </p>
-                  <p className="mt-4 text-xs text-muted-foreground">
-                    <span className="font-medium text-foreground">
-                      Best for:
-                    </span>{" "}
-                    {eng.ideal}
-                  </p>
-                </Card>
+                  <h3 className="font-semibold text-lg mt-5">{step.title}</h3>
+                  <p className="text-sm text-muted-foreground mt-2 leading-relaxed max-w-xs mx-auto">{step.body}</p>
+                </div>
               </FadeIn>
             ))}
           </div>
+        </div>
+      </section>
+
+      <ServicesGrid maxItems={5} showAll variant="default" />
+
+      <section className="py-24 lg:py-32 bg-muted/30">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
+          <FadeIn>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-center text-balance">
+              Engagement Models
+            </h2>
+            <p className="mt-4 text-base sm:text-lg text-muted-foreground text-center max-w-2xl mx-auto leading-relaxed">
+              Different needs, different approaches. All fixed-price, all outcome-oriented.
+            </p>
+          </FadeIn>
+
+          <StaggerContainer className="mt-12 lg:mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {engagements.map((eng) => (
+              <StaggerItem key={eng.title}>
+                <Card className="p-6 sm:p-7 h-full flex flex-col hover:shadow-elevated hover:-translate-y-0.5 transition-all duration-300">
+                  <h3 className="font-semibold text-lg">{eng.title}</h3>
+                  <div className="mt-3 flex items-baseline gap-2">
+                    <span className="text-3xl font-bold tracking-tight">{eng.price}</span>
+                    <span className="text-sm text-muted-foreground">{eng.duration}</span>
+                  </div>
+                  <p className="mt-4 text-sm text-muted-foreground leading-relaxed flex-1">{eng.description}</p>
+                  <p className="mt-5 text-xs text-muted-foreground">
+                    <span className="font-medium text-foreground">Best for:</span> {eng.ideal}
+                  </p>
+                </Card>
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
         </div>
       </section>
 
@@ -147,5 +126,21 @@ export default function ServicesPage() {
         variant="default"
       />
     </>
+  );
+}
+
+function StaggerContainer({ children, className }: { children: React.ReactNode; className?: string }) {
+  return (
+    <div className={className}>
+      {children}
+    </div>
+  );
+}
+
+function StaggerItem({ children, className }: { children: React.ReactNode; className?: string }) {
+  return (
+    <FadeIn className={className}>
+      {children}
+    </FadeIn>
   );
 }

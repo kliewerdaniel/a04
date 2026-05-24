@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { CaseStudyCard } from "@/components/sections/case-study-card";
 import { StaggerContainer, StaggerItem } from "@/components/animations/fade-in";
+import { cn } from "@/lib/utils";
 import type { CaseStudy } from "@/types";
 
 export function CaseStudiesGrid({
@@ -24,16 +25,19 @@ export function CaseStudiesGrid({
 
   return (
     <>
-      <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2 mb-8">
+      <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1 mb-8" role="tablist" aria-label="Filter by technology">
         {technologies.map((t) => (
           <button
             key={t}
             onClick={() => setActiveFilter(t)}
-            className={`px-3 py-1.5 text-sm rounded-full whitespace-nowrap transition-colors ${
+            role="tab"
+            aria-selected={activeFilter === t}
+            className={cn(
+              "px-3.5 py-1.5 text-sm rounded-full whitespace-nowrap transition-all duration-200 font-medium",
               activeFilter === t
-                ? "bg-primary text-primary-foreground"
+                ? "bg-primary text-primary-foreground shadow-sm"
                 : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-            }`}
+            )}
           >
             {t}
           </button>
@@ -41,10 +45,8 @@ export function CaseStudiesGrid({
       </div>
 
       {filtered.length === 0 ? (
-        <div className="text-center py-16">
-          <p className="text-muted-foreground">
-            No case studies match this filter.
-          </p>
+        <div className="text-center py-20">
+          <p className="text-muted-foreground text-lg">No case studies match this filter.</p>
         </div>
       ) : (
         <StaggerContainer className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

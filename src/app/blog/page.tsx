@@ -14,15 +14,14 @@ export default function BlogPage() {
   const categories = getCategories(posts);
 
   return (
-    <div className="pt-24 pb-16">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div className="pt-28 pb-20 lg:pb-24">
+      <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
         <FadeIn>
-          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-balance">
             Blog
           </h1>
-          <p className="mt-4 text-lg text-muted-foreground max-w-2xl">
-            Deep technical content on AI systems, local LLMs, and production
-            automation. 120+ articles and counting.
+          <p className="mt-4 sm:mt-5 text-base sm:text-lg text-muted-foreground max-w-2xl leading-relaxed">
+            Deep technical content on AI systems, local LLMs, and production automation. 120+ articles and counting.
           </p>
         </FadeIn>
 

@@ -3,9 +3,8 @@ import { ServicesGrid } from "@/components/sections/services-grid";
 import { MetricsBar } from "@/components/sections/metrics-bar";
 import { CTASection } from "@/components/sections/cta-section";
 import { CaseStudyCard } from "@/components/sections/case-study-card";
+import { BlogCard } from "@/components/blog/blog-card";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/animations/fade-in";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { getPosts } from "@/lib/blog";
@@ -29,18 +28,18 @@ export default function HomePage() {
 
       <ServicesGrid maxItems={3} />
 
-      <section className="py-24 bg-muted/30">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="py-24 lg:py-32 bg-muted/30">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
           <FadeIn>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">
               Recent Work
             </h2>
-            <p className="mt-3 text-lg text-muted-foreground max-w-2xl">
-              Real systems, real results.
+            <p className="mt-4 text-base sm:text-lg text-muted-foreground max-w-2xl leading-relaxed">
+              Real systems, real results. Detailed case studies of AI infrastructure I&apos;ve built.
             </p>
           </FadeIn>
 
-          <StaggerContainer className="mt-12 grid gap-6 md:grid-cols-2">
+          <StaggerContainer className="mt-12 lg:mt-16 grid gap-6 md:grid-cols-2">
             {featuredCaseStudies.map((cs) => (
               <StaggerItem key={cs.slug}>
                 <CaseStudyCard {...cs} variant="featured" />
@@ -51,9 +50,9 @@ export default function HomePage() {
           <FadeIn className="mt-10 text-center">
             <Link
               href="/case-studies"
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1"
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1.5 group"
             >
-              View all case studies <ArrowRight className="h-3 w-3" />
+              View all case studies <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
             </Link>
           </FadeIn>
         </div>
@@ -61,66 +60,55 @@ export default function HomePage() {
 
       <MetricsBar metrics={METRICS} />
 
-      <section className="py-24">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="py-24 lg:py-32">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
           <FadeIn>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">
               Latest Writing
             </h2>
-            <p className="mt-3 text-lg text-muted-foreground max-w-2xl">
-              Deep technical content on AI systems, local LLMs, and production
-              automation.
+            <p className="mt-4 text-base sm:text-lg text-muted-foreground max-w-2xl leading-relaxed">
+              Deep technical content on AI systems, local LLMs, and production automation.
             </p>
           </FadeIn>
 
-          <StaggerContainer className="mt-12 grid gap-6 md:grid-cols-3">
+          <StaggerContainer className="mt-12 lg:mt-16 grid gap-5 md:grid-cols-3">
             {posts.map((post) => (
               <StaggerItem key={post.slug}>
-                <Link href={`/blog/${post.slug}`} className="block group">
-                  <Card className="p-5 h-full hover:translate-y-[-4px] transition-all duration-200 hover:shadow-md">
-                    <div className="flex items-center gap-2 mb-3">
-                      <Badge variant="secondary" className="text-xs">
-                        {post.category}
-                      </Badge>
-                      <span className="text-xs text-muted-foreground">
-                        {post.reading_time} min read
-                      </span>
-                    </div>
-                    <h3 className="font-semibold group-hover:text-primary transition-colors line-clamp-2">
-                      {post.title}
-                    </h3>
-                    <p className="mt-2 text-sm text-muted-foreground line-clamp-2">
-                      {post.description}
-                    </p>
-                    <div className="mt-3 text-xs text-muted-foreground">
-                      {new Date(post.date).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
-                    </div>
-                  </Card>
-                </Link>
+                <BlogCard post={post} />
               </StaggerItem>
             ))}
           </StaggerContainer>
+
+          <FadeIn className="mt-10 text-center">
+            <Link
+              href="/blog"
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1.5 group"
+            >
+              Read all 120+ articles <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
+            </Link>
+          </FadeIn>
         </div>
       </section>
 
-      <section className="py-16 border-y border-border">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
+      <section className="py-20 lg:py-24 border-y border-border-subtle">
+        <div className="mx-auto max-w-4xl px-5 sm:px-8 lg:px-10 text-center">
           <FadeIn>
-            <p className="text-lg sm:text-xl italic text-muted-foreground leading-relaxed">
-              &ldquo;I believe AI infrastructure should be owned, not rented.
-              Local-first, private, and built to last.&rdquo;
-            </p>
+            <div className="w-12 h-0.5 bg-primary/40 mx-auto mb-8" aria-hidden="true" />
+            <blockquote>
+              <p className="text-xl sm:text-2xl lg:text-3xl italic text-muted-foreground leading-relaxed font-light text-balance">
+                &ldquo;AI infrastructure should be owned, not rented. Local-first, private, and built to last.&rdquo;
+              </p>
+            </blockquote>
+            <cite className="block mt-6 text-sm text-muted-foreground not-italic font-medium">
+              — Daniel Kliewer
+            </cite>
           </FadeIn>
         </div>
       </section>
 
       <CTASection
         headline="Ready to Build?"
-        body="Let's talk about your AI infrastructure needs. Free 30-minute consultation — no pressure, no pitch."
+        body="Let&apos;s talk about your AI infrastructure needs. Free 30-minute consultation — no pressure, no pitch."
         primaryCTA={{ text: "Book a Free Consultation", href: "/contact" }}
         variant="prominent"
       />

@@ -13,16 +13,35 @@ export const metadata: Metadata = {
     "Austin-based AI systems engineer building local-first AI infrastructure. 120+ technical articles on AI systems, local LLMs, and production automation.",
 };
 
+const philosophy = [
+  {
+    title: "AI infrastructure should be owned, not rented.",
+    body: "Cloud AI creates dependency. Local-first creates sovereignty. Your data, your models, your control.",
+  },
+  {
+    title: "Local-first is both a privacy stance and an architectural advantage.",
+    body: "Lower latency, lower cost, full control over your data and infrastructure.",
+  },
+  {
+    title: "The best AI systems are built, not configured.",
+    body: "No-code tools have limits. Custom architecture has none. Every system is tailored to the problem.",
+  },
+  {
+    title: "Technical depth is a business advantage.",
+    body: "Deep understanding leads to better decisions, faster iteration, and fewer surprises in production.",
+  },
+];
+
+const workStyle = [
+  { title: "Discovery-First", body: "Understand before building. Every project starts with deep understanding of the problem space." },
+  { title: "Iterative", body: "Ship quickly, refine continuously. First working prototype in under a week." },
+  { title: "Transparent", body: "Fixed pricing, clear deliverables, weekly demos. No surprises, no scope creep." },
+  { title: "Knowledge Transfer", body: "I teach as I build. Your team should understand and own the system I deliver." },
+];
+
 const expertise = [
-  "Local LLMs",
-  "RAG Systems",
-  "AI Agents",
-  "Knowledge Graphs",
-  "Automation Pipelines",
-  "MCP Protocol",
-  "Next.js",
-  "TypeScript",
-  "Python",
+  "Local LLMs", "RAG Systems", "AI Agents", "Knowledge Graphs",
+  "Automation Pipelines", "MCP Protocol", "Next.js", "TypeScript", "Python",
 ];
 
 export default function AboutPage() {
@@ -35,88 +54,60 @@ export default function AboutPage() {
         background="grid"
       />
 
-      <section className="py-24">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+      <section className="py-24 lg:py-32">
+        <div className="mx-auto max-w-3xl px-5 sm:px-8 lg:px-10">
           <FadeIn>
-            <h2 className="text-2xl font-semibold mb-6">The Short Version</h2>
-            <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-              I build local-first AI infrastructure for organizations that need
-              control, privacy, and real integration. I started as a curious
-              engineer experimenting with local LLMs and turned it into a
-              consultancy that ships production systems.
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-8">The Short Version</h2>
+            <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
+              I build local-first AI infrastructure for organizations that need control, privacy, and real integration. I started as a curious engineer experimenting with local LLMs and turned it into a consultancy that ships production systems.
             </p>
+          </FadeIn>
+        </div>
+      </section>
 
-            <h2 className="text-2xl font-semibold mb-6">The Philosophy</h2>
-            <div className="space-y-4">
-              <div className="p-4 rounded-lg border border-border">
-                <p className="font-medium">AI infrastructure should be owned, not rented.</p>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Cloud AI creates dependency. Local-first creates sovereignty.
-                </p>
-              </div>
-              <div className="p-4 rounded-lg border border-border">
-                <p className="font-medium">
-                  Local-first is both a privacy stance and an architectural
-                  advantage.
-                </p>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Lower latency, lower cost, full control.
-                </p>
-              </div>
-              <div className="p-4 rounded-lg border border-border">
-                <p className="font-medium">
-                  The best AI systems are built, not configured.
-                </p>
-                <p className="text-sm text-muted-foreground mt-1">
-                  No-code tools have limits. Custom architecture has none.
-                </p>
-              </div>
-              <div className="p-4 rounded-lg border border-border">
-                <p className="font-medium">
-                  Technical depth is a business advantage.
-                </p>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Deep understanding leads to better decisions, faster iteration,
-                  and fewer surprises.
-                </p>
-              </div>
-            </div>
+      <section className="py-24 lg:py-32 bg-muted/30">
+        <div className="mx-auto max-w-5xl px-5 sm:px-8 lg:px-10">
+          <FadeIn>
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-12 text-center">The Philosophy</h2>
+          </FadeIn>
+          <div className="grid gap-6 sm:grid-cols-2">
+            {philosophy.map((item, i) => (
+              <FadeIn key={i} delay={i * 0.1}>
+                <Card className="p-6 sm:p-7 h-full">
+                  <h3 className="font-semibold text-base">{item.title}</h3>
+                  <p className="text-sm text-muted-foreground mt-2 leading-relaxed">{item.body}</p>
+                </Card>
+              </FadeIn>
+            ))}
+          </div>
+        </div>
+      </section>
 
-            <h2 className="text-2xl font-semibold mt-12 mb-6">How I Work</h2>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Card className="p-5">
-                <h3 className="font-semibold">Discovery-First</h3>
-                <p className="text-sm text-muted-foreground mt-2">
-                  Understand before building. Every project starts with a deep
-                  understanding of the problem.
-                </p>
-              </Card>
-              <Card className="p-5">
-                <h3 className="font-semibold">Iterative</h3>
-                <p className="text-sm text-muted-foreground mt-2">
-                  Ship quickly, refine continuously. First working prototype in
-                  under a week.
-                </p>
-              </Card>
-              <Card className="p-5">
-                <h3 className="font-semibold">Transparent</h3>
-                <p className="text-sm text-muted-foreground mt-2">
-                  Fixed pricing, clear deliverables, weekly demos. No surprises.
-                </p>
-              </Card>
-              <Card className="p-5">
-                <h3 className="font-semibold">Knowledge Transfer</h3>
-                <p className="text-sm text-muted-foreground mt-2">
-                  I teach as I build. Your team should understand the system I
-                  deliver.
-                </p>
-              </Card>
-            </div>
+      <section className="py-24 lg:py-32">
+        <div className="mx-auto max-w-5xl px-5 sm:px-8 lg:px-10">
+          <FadeIn>
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-12 text-center">How I Work</h2>
+          </FadeIn>
+          <div className="grid gap-6 sm:grid-cols-2">
+            {workStyle.map((item, i) => (
+              <FadeIn key={i} delay={i * 0.1}>
+                <Card className="p-6 sm:p-7 h-full">
+                  <h3 className="font-semibold text-base">{item.title}</h3>
+                  <p className="text-sm text-muted-foreground mt-2 leading-relaxed">{item.body}</p>
+                </Card>
+              </FadeIn>
+            ))}
+          </div>
+        </div>
+      </section>
 
-            <h2 className="text-2xl font-semibold mt-12 mb-6">Expertise</h2>
-            <div className="flex flex-wrap gap-2">
+      <section className="py-24 lg:py-32 bg-muted/30">
+        <div className="mx-auto max-w-3xl px-5 sm:px-8 lg:px-10 text-center">
+          <FadeIn>
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-8">Expertise</h2>
+            <div className="flex flex-wrap gap-2 justify-center">
               {expertise.map((item) => (
-                <Badge key={item} variant="secondary" className="text-sm py-1.5">
+                <Badge key={item} variant="secondary" className="text-sm py-1.5 px-3.5">
                   {item}
                 </Badge>
               ))}
@@ -129,7 +120,7 @@ export default function AboutPage() {
 
       <CTASection
         headline="Want to work together?"
-        body="Let's talk about your project and how we can build something great."
+        body="Let&apos;s talk about your project and how I can help."
         primaryCTA={{ text: "Book a Free Consultation", href: "/contact" }}
         secondaryCTA={{ text: "Read the Blog", href: "/blog" }}
         variant="default"

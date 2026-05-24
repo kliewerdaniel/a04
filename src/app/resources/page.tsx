@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { HeroSection } from "@/components/sections/hero-section";
 import { CTASection } from "@/components/sections/cta-section";
-import { FadeIn, StaggerContainer, StaggerItem } from "@/components/animations/fade-in";
+import { StaggerContainer, StaggerItem } from "@/components/animations/fade-in";
 import { Button } from "@/components/ui/button";
 import { ResourceCard } from "@/components/sections/resource-card";
 
@@ -29,7 +29,7 @@ const resources = [
     description:
       "Step-by-step guide to deploying open-source LLMs on your own infrastructure with Ollama and Docker.",
     badge: "$19",
-    badgeVariant: "default" as const,
+    badgeVariant: "primary" as const,
     slug: "local-llm-deployment-guide",
   },
   {
@@ -39,7 +39,7 @@ const resources = [
     description:
       "A structured library of prompt templates for common AI tasks — content generation, analysis, extraction, and more.",
     badge: "$29",
-    badgeVariant: "default" as const,
+    badgeVariant: "primary" as const,
     slug: "prompt-engineering-toolkit",
   },
   {
@@ -49,7 +49,7 @@ const resources = [
     description:
       "Ready-to-deploy n8n and Make automation workflows for content, data, and customer operations.",
     badge: "$39",
-    badgeVariant: "default" as const,
+    badgeVariant: "primary" as const,
     slug: "ai-workflow-templates",
   },
   {
@@ -84,8 +84,8 @@ export default function ResourcesPage() {
         background="gradient"
       />
 
-      <section className="py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="py-20 lg:py-24">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
           <StaggerContainer className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {resources.map((r) => (
               <StaggerItem key={r.title}>
@@ -96,24 +96,24 @@ export default function ResourcesPage() {
         </div>
       </section>
 
-      <section className="py-16 border-y border-border">
-        <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 text-center">
-          <FadeIn>
-            <h2 className="text-2xl font-semibold">
+      <section className="py-20 lg:py-24 border-y border-border-subtle">
+        <div className="mx-auto max-w-2xl px-5 sm:px-8 lg:px-10 text-center">
+          <div>
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
               Get new resources delivered to your inbox.
             </h2>
-            <p className="mt-2 text-muted-foreground">
-              No spam. Unsubscribe anytime.
-            </p>
+            <p className="mt-3 text-muted-foreground">No spam. Unsubscribe anytime.</p>
             <form className="mt-6 flex gap-3 max-w-md mx-auto">
               <input
                 type="email"
                 placeholder="your@email.com"
-                className="flex-1 px-4 py-2.5 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                className="flex-1 px-4 py-3 rounded-xl border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-shadow"
+                aria-label="Email address"
+                required
               />
-              <Button type="submit">Subscribe</Button>
+              <Button type="submit" size="md">Subscribe</Button>
             </form>
-          </FadeIn>
+          </div>
         </div>
       </section>
 

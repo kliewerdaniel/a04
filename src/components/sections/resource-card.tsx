@@ -13,7 +13,7 @@ interface ResourceCardProps {
   price: string;
   description: string;
   badge: string;
-  badgeVariant: "default" | "success" | "accent" | "secondary";
+  badgeVariant: "primary" | "success" | "accent" | "secondary";
   slug: string;
 }
 
@@ -58,22 +58,22 @@ export function ResourceCard({
   }
 
   return (
-    <Card className="p-6 h-full flex flex-col">
+    <Card className="p-6 sm:p-7 h-full flex flex-col group hover:shadow-elevated hover:-translate-y-0.5 transition-all duration-300">
       <div className="flex items-center justify-between mb-3">
-        <span className="text-xs text-muted-foreground uppercase tracking-wider">
+        <span className="text-xs text-muted-foreground uppercase tracking-wider font-medium">
           {type}
         </span>
         <Badge variant={badgeVariant}>{badge}</Badge>
       </div>
-      <h3 className="font-semibold">{title}</h3>
-      <p className="mt-2 text-sm text-muted-foreground flex-1">
+      <h3 className="font-semibold text-base">{title}</h3>
+      <p className="mt-2.5 text-sm text-muted-foreground leading-relaxed flex-1">
         {description}
       </p>
-      <div className="mt-4 space-y-2">
+      <div className="mt-5 space-y-2">
         {price === "Free" ? (
           <Link href="/contact">
-            <Button size="sm" className="w-full gap-2">
-              <Download className="h-3 w-3" /> Download Free
+            <Button variant="secondary" size="sm" className="w-full gap-2">
+              <Download className="h-3.5 w-3.5" aria-hidden="true" /> Download Free
             </Button>
           </Link>
         ) : (
@@ -86,16 +86,14 @@ export function ResourceCard({
               disabled={loading}
             >
               {loading ? (
-                <Loader2 className="h-3 w-3 animate-spin" />
+                <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
               ) : (
-                <Lock className="h-3 w-3" />
+                <Lock className="h-3.5 w-3.5" aria-hidden="true" />
               )}
               {loading ? "Opening checkout..." : `Buy Now — ${price}`}
             </Button>
             {error && (
-              <p className="text-xs text-center text-muted-foreground">
-                {error}
-              </p>
+              <p className="text-xs text-center text-destructive" role="alert">{error}</p>
             )}
           </>
         )}
